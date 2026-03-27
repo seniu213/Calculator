@@ -1,30 +1,44 @@
 #include <iostream>
 #include <stack>
+#include <sstream>
+
 using namespace std;
 
-
-
-
-
-
-
 int main() {
+    string input;
+    cout << "Enter expression in RPN: ";
+    getline(cin, input);
 
-    stack<char> s = {};
-    char input[20] = {};
-    cin >> input;
+    stack<double> st;
+    stringstream ss(input);
+    string token;
 
-    for (int i = 0; input[i] != '\0'; i++) {
-        s.push(input[i]);
-        if (s.top() == ' ') s.pop();
+    while (ss >> token) {
+        // если это число
+        if (isdigit(token[0]) || (token[0] == '-' && token.length() > 1)) {
+            st.push(stod(token));
+        }
+        else {
+            // оператор
+            double b = st.top(); st.pop();
+            double a = st.top(); st.pop();
+
+            if (token == "+") {
+                st.push(a + b);
+            }
+            else if (token == "-") {
+                st.push(a - b);
+            }
+            else if (token == "*") {
+                st.push(a * b);
+            }
+            else if (token == "/") {
+                st.push(a / b);
+            }
+        }
     }
 
-    cout << s.top() << endl;
-    s.pop();
-    cout << s.top() << endl;
-
-
-
+    cout << "Result: " << st.top() << endl;
 
     return 0;
 }
